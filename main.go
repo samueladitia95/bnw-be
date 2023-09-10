@@ -17,6 +17,8 @@ func main() {
 	fmt.Println("Masuk sini")
 
 	app.OnRecordAfterCreateRequest("Contact_us").Add(func(e *core.RecordCreateEvent) error {
+		payload := e.Record.PublicExport()
+
 		message := &mailer.Message{
 			From: mail.Address{
 				Address: app.Settings().Meta.SenderAddress,
@@ -28,7 +30,7 @@ func main() {
 			// bcc, cc, attachments and custom headers are also supported...
 		}
 
-		fmt.Println("something to send")
+		fmt.Println(payload)
 
 		return app.NewMailClient().Send(message)
 	})
