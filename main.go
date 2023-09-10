@@ -2,6 +2,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/mail"
 
@@ -13,9 +14,7 @@ import (
 func main() {
 	app := pocketbase.New()
 
-	if err := app.Start(); err != nil {
-		log.Fatal(err)
-	}
+	fmt.Println("Masuk sini")
 
 	app.OnRecordAfterCreateRequest("Contact_us").Add(func(e *core.RecordCreateEvent) error {
 		message := &mailer.Message{
@@ -28,6 +27,8 @@ func main() {
 			HTML:    "SEXY BODY",
 			// bcc, cc, attachments and custom headers are also supported...
 		}
+
+		fmt.Println("something to send")
 
 		return app.NewMailClient().Send(message)
 	})
