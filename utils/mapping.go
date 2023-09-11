@@ -5,9 +5,9 @@ func EmailSubjectMapping(subject string) (email string) {
 		// "Partnership":              "benyaminwidjojo@bwintl.com",
 		// "Be Our Official Retailer": "sales@bwintl.com",
 		// "Customer Service":         "customerservice@bwintl.com",
-		"Partnership":              "reza@polaroisme.com",
-		"Be Our Official Retailer": "rezafiansyah.putra@gmail.com",
-		"Customer Service":         "samueladitia95@gmail.com",
+		"Partnership":              "monicapangestu23@gmail.com",
+		"Be Our Official Retailer": "monicapangestudsgn@gmail.com",
+		"Customer Service":         "monicapangestu23@gmail.com",
 	}
 
 	return subjectToEmailMap[subject]
