@@ -4,9 +4,12 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/http"
 	"net/mail"
 
+	"github.com/labstack/echo/v5"
 	"github.com/pocketbase/pocketbase"
+	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/pocketbase/pocketbase/tools/mailer"
 	"github.com/samueladitia95/bnw-be/utils"
@@ -45,6 +48,34 @@ func main() {
 		}
 
 		return app.NewMailClient().Send(message)
+	})
+
+	app.OnBeforeServe().Add(func(e *core.ServeEvent) error {
+		e.Router.POST("/verify-retailer", func(c echo.Context) error {
+			data := struct {
+				Id       string `json:"id" form:"id"`
+				Password       string `json:"password" form:"password"`
+			}{}
+
+			if err := c.Bind(&data); err != nil {
+					return apis.NewBadRequestError("Failed to read request data", err)
+			}
+
+			record, _ := app.Dao().FindRecordById("Products", data.Id)
+			if record == nil {
+				return c.JSON(http.StatusNotFound, map[string]any{"message": "Not Found"})
+			}
+
+			password := record.GetString("password")
+
+			if (password != data.Password) {
+				return c.JSON(http.StatusUnauthorized, map[string]any{"message": "Failed Auth"})
+			}
+			
+			return c.JSON(http.StatusOK, map[string]any{"message": "Ok"})
+		})
+
+    return nil
 	})
 
 	if err := app.Start(); err != nil {
